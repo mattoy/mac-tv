@@ -9,90 +9,51 @@ import Foundation
 import AVKit
 import Combine
 
-class VideoBooklet: ObservableObject, Identifiable, BookletProtocol {
-    var id: Int { video.id }
-    
+class VideoBooklet: ObservableObject, BookletProtocol {
     private let video: Video
     
-    init(video: Video) {
+    let delegate: LibraryDelegate
+    var subscriptions = Set<AnyCancellable>()
+    
+    init(video: Video, delegate: LibraryDelegate) {
         self.video = video
-    }
-    
-    private var _player: AVPlayer?
-    
-    var player: AVPlayer {
-        if let player = _player {
-            return player
-        } else {
-            self._player = Projector.shared.insert(video: self.video)
-            subscribeToPlayerTime()
-            subscribeToPlayerStatus()
-
-            return _player!
-        }
+        self.delegate = delegate
+        print("Booklet init \(video.id)")
     }
     
     @Published var cover: UIImage?
     
-    func loadImage() {
-        print("Fetch Image")
+    func loadImage() async -> UIImage {
+        print("load image \(video.id)")
+        let request = URLRequest(url: video.imageURL, cachePolicy: .returnCacheDataElseLoad)
         
-        guard let url = URL(string: video.imageURL) else {
-            print("Invalid Image URL")
-            return
-        }
-        
-        let request = URLRequest(url: url, cachePolicy: .returnCacheDataElseLoad)
-        URLSession.shared.dataTaskPublisher(for: request)
-            .map { UIImage(data: $0.data) }
-            .replaceError(with: UIImage(systemName: "exclamationmark.icloud.fill"))
-            .receive(on: RunLoop.main)
-            .assign(to: \.cover, on: self)
-            .store(in: &subscriptions)
-    }
-    
-    func subscribeToPlayerTime() {
-        print("subscribed to player time")
-        Projector.shared.playerObserver.playerTimePublisher
-            .sink(receiveValue: { playingPosition in
-                print("Playing time updated \(playingPosition)")
-                self.video.playingPosition = playingPosition
-                self.save(playingPosition: playingPosition)
-                
-                self.objectWillChange.send()
-            })
-            .store(in: &subscriptions)
-    }
-    
-    private func save(playingPosition: TimeInterval) {
-        let store = UserDefaults.standard
-        
-        if store.dictionary(forKey: "playingPositions") as? [String: Double] == nil {
-            store.setValue([String: Double](), forKey: "playingPositions")
-        }
-        
-        if var playingPositions = store.dictionary(forKey: "playingPositions") as? [String: Double] {
-            let key = self.video.id.description
-            playingPositions[key] = playingPosition
-            store.setValue(playingPositions, forKey: "playingPositions")
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            return UIImage(data: data) ?? UIImage(systemName: "exclamationmark.icloud.fill")!
+        } catch {
+            return UIImage(systemName: "exclamationmark.icloud.fill")!
         }
     }
     
-    func subscribeToPlayerStatus() {
-        print("subscribed to player status")
-        Projector.shared.playerObserver.playerStatusPublisher
-            .filter { status in
-                status == .readyToPlay
-            }
-            .sink { status in
-                print("status \(status.rawValue.description)")
-                print("Seek to \(self.video.playingPosition)")
-                self.player.seek(to: CMTime(seconds: self.video.playingPosition, preferredTimescale: 600) )
-            }
-            .store(in: &subscriptions)
-    }
-    
-    var subscriptions = Set<AnyCancellable>()
+//    private func save(playingPosition: TimeInterval) {
+//        let store = UserDefaults.standard
+//
+//        if store.dictionary(forKey: "playingPositions") as? [String: Double] == nil {
+//            store.setValue([String: Double](), forKey: "playingPositions")
+//        }
+//
+//        if var playingPositions = store.dictionary(forKey: "playingPositions") as? [String: Double] {
+//            let key = self.video.id.description
+//            playingPositions[key] = playingPosition
+//            store.setValue(playingPositions, forKey: "playingPositions")
+//        }
+//    }
+}
+
+// MARK: - Identifiable
+
+extension VideoBooklet: Identifiable {
+    var id: Int { video.id }
 }
 
 // MARK: - Getters
@@ -107,13 +68,10 @@ extension VideoBooklet {
     }
     
     var publishedDate: String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.locale = Locale(identifier: "de_DE")
-        return formatter.string(from: video.published)
+        video.published.formatted(date: .long, time: .omitted)
     }
     
-    var duration: String {
+    var duration: String {        
         var calendar = Calendar.current
         calendar.locale = Locale(identifier: "de_DE")
         let formatter = DateComponentsFormatter()
@@ -131,27 +89,41 @@ extension VideoBooklet {
                 return nil
         }
     }
-    
-//    var playingProgress: Double {
-//        video.playingProgress
-//    }
-//    
-//    var isInProgress: Bool {
-//        if case .inProgress(_) = video.progress { return true } else { return false }
-//    }
-//    
+ 
     var wasWatched: Bool {
         if case .watched = video.progress { return true } else { return false }
+    }
+    
+    var videoURL: URL {
+        video.url
+    }
+    
+    var playingPosition: TimeInterval {
+        video.playingPosition
     }
 }
 
 // MARK: - Intents
 extension VideoBooklet {
     func markAsWatched() {
-        video.playingPosition = video.duration
+        var newVideo = self.video
+        newVideo.playingPosition = video.duration
+        delegate.replace(self.video, with: newVideo)
     }
     
     func markAsUnwatched() {
-        video.playingPosition = 0
+        var newVideo = self.video
+        newVideo.playingPosition = 0
+        delegate.replace(self.video, with: newVideo)
     }
+    
+    func updatePlayingPosition(to time: TimeInterval) {
+        var newVideo = self.video
+        newVideo.playingPosition = time
+        delegate.replace(self.video, with: newVideo)
+    }
+}
+
+protocol LibraryDelegate {
+    func replace(_ video: Video, with newVideo: Video)
 }

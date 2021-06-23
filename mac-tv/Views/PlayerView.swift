@@ -9,33 +9,26 @@ import SwiftUI
 import AVKit
 
 struct PlayerView: View {
-    @State var player: AVPlayer = AVPlayer()
-    var video: URL
-    
+    var projector = Projector.shared
+    let videoURL: URL
+    let onTimeChange: (TimeInterval) -> ()
+        
+    internal init(videoURL: URL, onTimeChange: @escaping (TimeInterval) -> ()) {
+        self.onTimeChange = onTimeChange
+        self.videoURL = videoURL
+    }
+        
     var body: some View {
-        VideoPlayer(player: player /*, videoOverlay: overlay*/)
+        //VideoPlayer(player: projector.player)
+        VideoPlayerController(player: projector.player)
             .edgesIgnoringSafeArea(.all)
-            .onAppear() {
-                player = AVPlayer(url: video)
-                player.play()
+            .onAppear {
+                projector.insert(videoURL: videoURL)
+                projector.onTimeChange = self.onTimeChange
             }
-            .onDisappear() {
-                player.pause()
-            }
-    }
-    
-    func overlay() -> OverlayView {
-        OverlayView()
-    }
-}
-
-struct OverlayView: View {
-    var body: some View {
-        HStack {
-            Button("Vote A") {}
-                .buttonStyle(CardButtonStyle())
-            Button("Vote B") {}
-            Button("Vote C") {}
+            .onDisappear {
+                projector.pause()
+                projector.sendPlayerTime()
         }
     }
 }
@@ -46,6 +39,6 @@ struct PlayerView_Previews: PreviewProvider {
     }
     
     static var previews: some View {
-        return PlayerView(video: Self.videoURL())
+        return PlayerView(videoURL: Self.videoURL(), onTimeChange: { print("time changed to \($0)") })
     }
 }

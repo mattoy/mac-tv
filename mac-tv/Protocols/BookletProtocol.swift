@@ -14,11 +14,19 @@ protocol BookletProtocol: ObservableObject, Identifiable {
     var description: String { get }
     var publishedDate: String { get }
     var duration: String { get }
+    var videoURL: URL { get }
     
     var progress: Double? { get }
     var wasWatched: Bool { get }
     
-    var player: AVPlayer { get }
+    var playingPosition: TimeInterval { get }
     
-    func loadImage()
+//    var player: AVPlayer { get }
+    
+    func loadImage() async -> UIImage
+    
+    func updatePlayingPosition(to time: TimeInterval)
+    
+    func markAsWatched()
+    func markAsUnwatched()
 }

@@ -8,18 +8,45 @@ import AVKit
 import Combine
 
 class VideoLibrary: ObservableObject {
-    @Published var booklets: [VideoBooklet]
+    @Published var videos: [Video]
+    var booklets: [VideoBooklet] {
+        videos.map {
+            VideoBooklet(video: $0, delegate: self)
+        }
+    }
     
     var videosInProgress: [VideoBooklet] {
-        booklets.filter {
-            $0.progress != nil
+        videos.filter {
+            switch $0.progress {
+                case .inProgress(_):
+                    return true
+                default:
+                    return false
+            }
+        }
+        .map {
+            VideoBooklet(video: $0, delegate: self)
         }
     }
         
+    var videosSubscription: AnyCancellable?
+    
     init() {
-        self.booklets = VideoStore().freeVideos.map {
-            VideoBooklet(video: $0)
+        self.videos = VideoStore().freeVideos
+        
+        self.videosSubscription = self.$videos
+            .dropFirst()
+            .sink {
+                VideoStore().storedVideos = $0
+            }
+    }
+}
+
+extension VideoLibrary: LibraryDelegate {
+    func replace(_ video: Video, with newVideo: Video) {
+        if let index = videos.firstIndex(where: { $0.id == video.id }) {
+            videos[index] = newVideo
         }
-        print("init VideoLib")
+        print("New video #\(newVideo.id) '\(newVideo.title)': \(newVideo.playingPosition), progress: \(newVideo.progress)")
     }
 }

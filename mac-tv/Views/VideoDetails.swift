@@ -12,12 +12,6 @@ struct VideoDetails<BookletType: BookletProtocol>: View {
     @Environment(\.colorScheme) var colorScheme
     @ObservedObject var booklet: BookletType
     
-    fileprivate func extractedFunc() -> some View {
-        return VideoPlayer(player: booklet.player)
-            .edgesIgnoringSafeArea(.all)
-            .onAppear() { booklet.player.play() }
-            .onDisappear() { booklet.player.pause() }
-    }
     
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -26,14 +20,26 @@ struct VideoDetails<BookletType: BookletProtocol>: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
             }
+    
+            HStack(alignment: .top, spacing: 0) {
+                VStack {
+                    NavigationLink(destination: videoPlayer, label: {
+                        Label("Wiedergeben", systemImage: "play.fill")
+                    })
+//                        .frame(maxWidth: .infinity)
+//                    Button {
+//                        print("bookmarked")
+//                    } label: {
+//                        Label("Merken", systemImage: "bookmark")
+//                        Spacer()
+//                    }.frame(maxWidth: .infinity)
+                    
+                }
+                .padding()
+                .fixedSize(horizontal: true, vertical: true)
+                .layoutPriority(20)
+
                 
-            HStack(alignment: .top) {
-                NavigationLink(destination:
-                                extractedFunc()
-                , label: {
-                    Label("Wiedergeben", systemImage: "play.fill")
-                })
-                    .padding()
                 VStack(alignment: .leading) {
                     Text(booklet.description)
                         .foregroundColor(.primary)
@@ -47,33 +53,33 @@ struct VideoDetails<BookletType: BookletProtocol>: View {
                     }
                     .padding(.vertical)
                     .foregroundColor(.secondary)
-//                    .foregroundColor(Color.gray)
-                    
-                }.padding()
+                }
+                    .padding()
+                    .frame(maxWidth: .infinity)
             }
             .padding(.top, 80.0)
+            .fixedSize(horizontal: false, vertical: true)
             .frame(maxWidth: .infinity)
-            .background(Blur().mask(gradientMask))
+//            .background(Blur().mask(gradientMask))
+            .background(Material.thin)
+            .mask(gradientMask)
         }.ignoresSafeArea(.all)
         
     }
     
     var gradientMask: some View {
-        LinearGradient(gradient: Gradient(stops: [.init(color: .black, location: 0.70),
+        LinearGradient(gradient: Gradient(stops: [.init(color: .black, location: 0.80),
                                                   .init(color: .clear, location: 1.0)]),
                        startPoint: .bottom,
                        endPoint: .top)
     }
-}
-
-struct Blur: UIViewRepresentable {
-    // style: colorScheme == .dark ? .extraDark : .extraLight
-    var style: UIBlurEffect.Style = .regular
-    func makeUIView(context: Context) -> UIVisualEffectView {
-        return UIVisualEffectView(effect: UIBlurEffect(style: style))
-    }
-    func updateUIView(_ uiView: UIVisualEffectView, context: Context) {
-        uiView.effect = UIBlurEffect(style: style)
+    
+    fileprivate var videoPlayer: some View {
+        PlayerView(videoURL: booklet.videoURL,
+                   onTimeChange: booklet.updatePlayingPosition)
+            .onAppear {
+                Projector.shared.play(from: booklet.playingPosition)
+            }
     }
 }
 
@@ -88,10 +94,10 @@ struct SwiftUIView_Previews: PreviewProvider {
                                         //wasWatched: <#T##Bool#>,
                                         //player: <#T##AVPlayer#>
         )
-        Group {
+//        Group {
             VideoDetails(booklet: booklet)
-            VideoDetails(booklet: booklet)
-                .preferredColorScheme(.light)
-        }
+//            VideoDetails(booklet: booklet)
+//                .preferredColorScheme(.light)
+//        }
     }
 }

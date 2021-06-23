@@ -7,57 +7,30 @@
 
 import Foundation
 import FeedKit
-import Cache
 
-struct VideoStore {
-    let cache: Storage<String, [Video]>
-    
-    init() {
-        let diskConfig = DiskConfig(name: "VideoCache")
-        let memoryConfig = MemoryConfig(expiry: .seconds(3600), countLimit: 10, totalCostLimit: 10)
-        
-        self.cache = try! Storage<String, [Video]>(
-          diskConfig: diskConfig,
-          memoryConfig: memoryConfig,
-          transformer: TransformerFactory.forCodable(ofType: [Video].self)
-        )
-        
-        print("init Store")
-    }
-
-    fileprivate func fetchVideos() -> [Video] {
+class VideoStore {
+    func fetchVideos() -> [Video] {
         let feedURL = URL(string: "https://www.mac-tv.de/RSS_Podcast_HD.lasso")!
         let parser = FeedParser(URL: feedURL)
         let result = parser.parse()
-        
         let rssFeed = try? result.get().rssFeed
-        
         let items = rssFeed!.items!
         
         let videos = items.map { item -> Video in
-            
-            let insecureURL = URL(string: item.enclosure!.attributes!.url!)!
-            let secureURL = self.secureURL(from: insecureURL).absoluteString
-            
-            let insecureImageURL = URL(string: item.iTunes!.iTunesImage!.attributes!.href!)!
-            let secureImageURL = self.secureURL(from: insecureImageURL).absoluteString
+            let videoURL = secureURL(from: item.enclosure!.attributes!.url!)
+            let imageURL = secureURL(from: item.iTunes!.iTunesImage!.attributes!.href!)
             
             let id = extractID(item.link!)
             
             let video = Video(id: id,
                               title: item.title!,
                               description: item.description!,
-                              url: secureURL,
+                              url: videoURL,
                               duration: item.iTunes!.iTunesDuration!,
                               published: item.pubDate!,
-                              imageURL: secureImageURL)
-            
-            video.playingPosition = playingPosition(for: video)
-            
+                              imageURL: imageURL)
             return video
         }
-        
-        try! cache.setObject(videos, forKey: "videos", expiry: .seconds(3600))
         
         return videos
     }
@@ -67,13 +40,34 @@ struct VideoStore {
     }
     
     var freeVideos: [Video] {
-        get {
-            let videosFromCache = try? cache.object(forKey: "videos")
-            let videos = videosFromCache ?? fetchVideos()
-            for video in videos {
-                video.playingPosition = self.playingPosition(for: video)
+        let fetchedVideos = fetchVideos()
+        
+        var mergedVideos = storedVideos
+        fetchedVideos.forEach { fetchedVideo in
+            if !mergedVideos.contains(where: { $0.id == fetchedVideo.id }) {
+                mergedVideos.append(fetchedVideo)
             }
-            return videos
+        }
+        
+        storedVideos = mergedVideos
+        
+        return mergedVideos
+    }
+    
+    var storedVideos: [Video] {
+        get {
+            let store = UserDefaults.standard
+            guard let arrayData = store.value(forKey: "freeVideos") as? Data else {
+                return []
+            }
+            let videoArray = try! JSONDecoder().decode([Video].self, from: arrayData)
+            return videoArray //?? []
+        }
+        set {
+            let store = UserDefaults.standard
+            /*if*/ let encoded = try! JSONEncoder().encode(newValue) //{
+                store.set(encoded, forKey: "freeVideos")
+            //}
         }
     }
     
@@ -83,24 +77,12 @@ struct VideoStore {
         }
     }
     
-    func secureURL(from url: URL) -> URL {
-        var components = URLComponents(url: url, resolvingAgainstBaseURL: false)!
+    private func secureURL(from stringURL: String) -> URL {
+        let insecureURL = URL(string: stringURL)!
+        var components = URLComponents(url: insecureURL, resolvingAgainstBaseURL: false)!
         components.scheme = "https"
         let secureURL = components.url!
         return secureURL
-    }
-    
-    func playingPosition(for video: Video) -> TimeInterval {
-        let key = video.id.description
-        var position: TimeInterval = 0
-        
-        let store = UserDefaults.standard
-        if let playingPositions = store.dictionary(forKey: "playingPositions") as? [String: Double],
-           let positionInVideo = playingPositions[key] {
-            position = positionInVideo
-        }
-        
-        return position
     }
 }
 
@@ -110,5 +92,34 @@ extension String {
         return (try? NSRegularExpression(pattern: regex, options: []))?.matches(in: self, options: [], range: NSMakeRange(0, count)).map { match in
             (0..<match.numberOfRanges).map { match.range(at: $0).location == NSNotFound ? "" : nsString.substring(with: match.range(at: $0)) }
         } ?? []
+    }
+    
+    public func capturedGroups(withRegex pattern: String) -> [String] {
+        var results = [String]()
+        
+        var regex: NSRegularExpression
+        do {
+            regex = try NSRegularExpression(pattern: pattern, options: [])
+        } catch {
+            return results
+        }
+        let matches = regex.matches(in: self, options: [], range: NSRange(location:0, length: self.count))
+        
+        guard let match = matches.first else { return results }
+        
+        let lastRangeIndex = match.numberOfRanges - 1
+        guard lastRangeIndex >= 1 else { return results }
+        
+        for i in 1...lastRangeIndex {
+            let capturedGroupIndex = match.range(at: i)
+            let matchedString = (self as NSString).substring(with: capturedGroupIndex)
+            results.append(matchedString)
+        }
+        
+        return results
+    }
+    
+    func matchFirst(_ regex: String) -> String? {
+        capturedGroups(withRegex: regex).first
     }
 }

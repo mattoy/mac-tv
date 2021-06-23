@@ -17,9 +17,11 @@
 		193D348725E12DD30042C577 /* VideoDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193D348625E12DD30042C577 /* VideoDetails.swift */; };
 		193D349025E12F0B0042C577 /* VideoBooklet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193D348F25E12F0B0042C577 /* VideoBooklet.swift */; };
 		193D349325E13E540042C577 /* RibbonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193D349225E13E540042C577 /* RibbonView.swift */; };
+		1974109B2678CB3C001A7E00 /* VideoPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1974109A2678CB3C001A7E00 /* VideoPlayerController.swift */; };
 		197EFD2626231D2600F357F0 /* Projector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 197EFD2526231D2600F357F0 /* Projector.swift */; };
 		197F893C261C5F180062C8B9 /* FeedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 197F893B261C5F180062C8B9 /* FeedKit */; };
 		1985CD48265D55F200CC634D /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 191CFAB2265D4DAC00DFEAB6 /* Media.xcassets */; };
+		1993474A26830D53004B2AED /* Archive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1993474926830D53004B2AED /* Archive.swift */; };
 		19DF489D2621991100748E50 /* VideoCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19DF489C2621991100748E50 /* VideoCardView.swift */; };
 		19E5CB9C25E02294004AB005 /* mac_tvApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E5CB9B25E02294004AB005 /* mac_tvApp.swift */; };
 		19E5CB9E25E02294004AB005 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E5CB9D25E02294004AB005 /* ContentView.swift */; };
@@ -27,7 +29,6 @@
 		19E5CBAC25E0282C004AB005 /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E5CBAB25E0282C004AB005 /* Video.swift */; };
 		19E5CBDE25E058CA004AB005 /* VideoLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E5CBDD25E058CA004AB005 /* VideoLibrary.swift */; };
 		19FD9191261DA82F00A530FA /* VideoStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19FD9190261DA82F00A530FA /* VideoStore.swift */; };
-		19FD9194261E04E600A530FA /* Cache in Frameworks */ = {isa = PBXBuildFile; productRef = 19FD9193261E04E600A530FA /* Cache */; };
 		19FD9199261EDE7C00A530FA /* PlayerObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19FD9198261EDE7C00A530FA /* PlayerObserver.swift */; };
 /* End PBXBuildFile section */
 
@@ -55,7 +56,6 @@
 
 /* Begin PBXFileReference section */
 		191CFAB2265D4DAC00DFEAB6 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
-		193210E525E103EA0054F854 /* scraper.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = scraper.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		1938DCA22628B7B9009FA28C /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		1938DCA4262AB37E009FA28C /* Coffee Run.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Coffee Run.mp4"; sourceTree = "<group>"; };
 		1938DCA8262AF5BD009FA28C /* VideosStrip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideosStrip.swift; sourceTree = "<group>"; };
@@ -67,7 +67,9 @@
 		193D348625E12DD30042C577 /* VideoDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDetails.swift; sourceTree = "<group>"; };
 		193D348F25E12F0B0042C577 /* VideoBooklet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoBooklet.swift; sourceTree = "<group>"; };
 		193D349225E13E540042C577 /* RibbonView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RibbonView.swift; sourceTree = "<group>"; };
+		1974109A2678CB3C001A7E00 /* VideoPlayerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerController.swift; sourceTree = "<group>"; };
 		197EFD2526231D2600F357F0 /* Projector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Projector.swift; sourceTree = "<group>"; };
+		1993474926830D53004B2AED /* Archive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Archive.swift; sourceTree = "<group>"; };
 		19DF489C2621991100748E50 /* VideoCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCardView.swift; sourceTree = "<group>"; };
 		19E5CB9825E02294004AB005 /* mac-tv.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "mac-tv.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		19E5CB9B25E02294004AB005 /* mac_tvApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mac_tvApp.swift; sourceTree = "<group>"; };
@@ -93,7 +95,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				193210EB25E1052B0054F854 /* SwiftSoup in Frameworks */,
-				19FD9194261E04E600A530FA /* Cache in Frameworks */,
 				197F893C261C5F180062C8B9 /* FeedKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -127,6 +128,7 @@
 				19DF489C2621991100748E50 /* VideoCardView.swift */,
 				193D348625E12DD30042C577 /* VideoDetails.swift */,
 				1938DCA22628B7B9009FA28C /* PlayerView.swift */,
+				1974109A2678CB3C001A7E00 /* VideoPlayerController.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -143,7 +145,6 @@
 		19E5CB8F25E02294004AB005 = {
 			isa = PBXGroup;
 			children = (
-				193210E525E103EA0054F854 /* scraper.playground */,
 				19E5CB9A25E02294004AB005 /* mac-tv */,
 				1938DCB7262D69D2009FA28C /* mac-tvTests */,
 				19E5CB9925E02294004AB005 /* Products */,
@@ -170,6 +171,7 @@
 				19E5CBAB25E0282C004AB005 /* Video.swift */,
 				19FD9190261DA82F00A530FA /* VideoStore.swift */,
 				19FD9198261EDE7C00A530FA /* PlayerObserver.swift */,
+				1993474926830D53004B2AED /* Archive.swift */,
 				191CFAB2265D4DAC00DFEAB6 /* Media.xcassets */,
 				19E5CBA425E02296004AB005 /* Info.plist */,
 				19E5CBA125E02296004AB005 /* Preview Content */,
@@ -225,7 +227,6 @@
 			packageProductDependencies = (
 				193210EA25E1052B0054F854 /* SwiftSoup */,
 				197F893B261C5F180062C8B9 /* FeedKit */,
-				19FD9193261E04E600A530FA /* Cache */,
 			);
 			productName = "mac-tv";
 			productReference = 19E5CB9825E02294004AB005 /* mac-tv.app */;
@@ -261,7 +262,6 @@
 			packageReferences = (
 				193210E925E1052B0054F854 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 				197F893A261C5F180062C8B9 /* XCRemoteSwiftPackageReference "FeedKit" */,
-				19FD9192261E04E600A530FA /* XCRemoteSwiftPackageReference "Cache" */,
 			);
 			productRefGroup = 19E5CB9925E02294004AB005 /* Products */;
 			projectDirPath = "";
@@ -307,6 +307,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1938DCA9262AF5BD009FA28C /* VideosStrip.swift in Sources */,
+				1993474A26830D53004B2AED /* Archive.swift in Sources */,
 				193ABF67265E43FC00B57BDA /* BookletProtocol.swift in Sources */,
 				19FD9199261EDE7C00A530FA /* PlayerObserver.swift in Sources */,
 				193D349025E12F0B0042C577 /* VideoBooklet.swift in Sources */,
@@ -320,6 +321,7 @@
 				19E5CBDE25E058CA004AB005 /* VideoLibrary.swift in Sources */,
 				193D349325E13E540042C577 /* RibbonView.swift in Sources */,
 				193D348725E12DD30042C577 /* VideoDetails.swift in Sources */,
+				1974109B2678CB3C001A7E00 /* VideoPlayerController.swift in Sources */,
 				19FD9191261DA82F00A530FA /* VideoStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -512,7 +514,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 14.0;
+				TVOS_DEPLOYMENT_TARGET = 15.0;
 			};
 			name = Debug;
 		};
@@ -534,7 +536,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 14.0;
+				TVOS_DEPLOYMENT_TARGET = 15.0;
 			};
 			name = Release;
 		};
@@ -587,14 +589,6 @@
 				minimumVersion = 9.1.2;
 			};
 		};
-		19FD9192261E04E600A530FA /* XCRemoteSwiftPackageReference "Cache" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/hyperoslo/Cache";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 6.0.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -607,11 +601,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 197F893A261C5F180062C8B9 /* XCRemoteSwiftPackageReference "FeedKit" */;
 			productName = FeedKit;
-		};
-		19FD9193261E04E600A530FA /* Cache */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 19FD9192261E04E600A530FA /* XCRemoteSwiftPackageReference "Cache" */;
-			productName = Cache;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

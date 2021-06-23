@@ -9,21 +9,21 @@ import Foundation
 import FeedKit
 import SwiftUI
 
-class Video: Identifiable, Codable {
+struct Video: Identifiable, Codable {
     
     // MARK: - Properties
     
-    var id: Int
+    let id: Int
     
     let title: String
     let description: String
-    let url: String
+    let url: URL
     let duration: TimeInterval
     let published: Date
-    let imageURL: String
-    var playingPosition: TimeInterval = 0
+    let imageURL: URL
+    var playingPosition: TimeInterval
     
-    init(id: Int, title: String, description: String, url: String, duration: TimeInterval, published: Date, imageURL: String, playingPosition: TimeInterval = 0) {
+    init(id: Int, title: String, description: String, url: URL, duration: TimeInterval, published: Date, imageURL: URL, playingPosition: TimeInterval = 0) {
         self.id = id
         self.title = title
         self.description = description
@@ -79,13 +79,12 @@ extension Video: Hashable {
 
 extension Video: Equatable {
     static func == (lhs: Video, rhs: Video) -> Bool {
-        return (lhs.url == rhs.url &&
-                lhs.title == rhs.title &&
+        return (lhs.title == rhs.title &&
                 lhs.description == rhs.description &&
+                lhs.url == rhs.url &&
                 lhs.duration == rhs.duration &&
                 lhs.published == rhs.published &&
                 lhs.imageURL == rhs.imageURL &&
                 lhs.playingPosition == rhs.playingPosition)
-        
     }
 }

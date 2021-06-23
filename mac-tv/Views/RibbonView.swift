@@ -18,6 +18,7 @@ struct RibbonView: View {
     init(videoLibrary: VideoLibrary) {
         self.videoLibrary = videoLibrary
         print("init RibbonView")
+        
     }
     
     var body: some View {
