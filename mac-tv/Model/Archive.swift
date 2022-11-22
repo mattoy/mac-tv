@@ -1,10 +1,6 @@
 import SwiftSoup
 import Foundation
 
-func apply<T, V>(fn: ([T]) -> V, args: [T]) -> V {
-    return fn(args)
-}
-
 struct Archive {
     struct DummyVideo: Codable {
         let id: Int

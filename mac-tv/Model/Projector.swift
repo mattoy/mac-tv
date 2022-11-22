@@ -8,6 +8,7 @@
 import AVKit
 import Combine
 
+/// Singleton that holds an AVPlayer to control playback and content
 class Projector: ObservableObject {
     static var shared = Projector()
     
@@ -15,6 +16,7 @@ class Projector: ObservableObject {
     let playerObserver: PlayerObserver
     
     var timeSubscription: AnyCancellable?
+	var statusSubscription: AnyCancellable?
     
     var onTimeChange: (TimeInterval) -> () = { _ in }
     
@@ -34,7 +36,15 @@ class Projector: ObservableObject {
     // MARK: TODO Seek after Obeserver sends status ready
     func play(from time: TimeInterval = 0) {
         player.play()
-        player.seek(to: CMTime(seconds: time, preferredTimescale: 600))
+		guard time != 0 else { return }
+		statusSubscription = playerObserver.playerStatusPublisher.sink { status in
+			switch status {
+				case .readyToPlay:
+					self.player.seek(to: CMTime(seconds: time, preferredTimescale: 600))
+				default:
+					return
+			}
+		}
     }
     
     func pause() {

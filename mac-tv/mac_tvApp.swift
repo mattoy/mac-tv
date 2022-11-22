@@ -11,7 +11,6 @@ import FeedKit
 
 @main
 struct mac_tvApp: App {
-    
     var body: some Scene {
         WindowGroup {
             ContentView()

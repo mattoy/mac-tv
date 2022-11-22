@@ -48,8 +48,9 @@ class VideoStore {
                 mergedVideos.append(fetchedVideo)
             }
         }
+		let sortedVideos = mergedVideos.sorted(by: { $0.published > $1.published }) // sort by newest first
         
-        storedVideos = mergedVideos
+        storedVideos = sortedVideos
         
         return mergedVideos
     }

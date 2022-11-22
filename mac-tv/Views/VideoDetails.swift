@@ -26,13 +26,12 @@ struct VideoDetails<BookletType: BookletProtocol>: View {
                     NavigationLink(destination: videoPlayer, label: {
                         Label("Wiedergeben", systemImage: "play.fill")
                     })
-//                        .frame(maxWidth: .infinity)
-//                    Button {
-//                        print("bookmarked")
-//                    } label: {
-//                        Label("Merken", systemImage: "bookmark")
-//                        Spacer()
-//                    }.frame(maxWidth: .infinity)
+                    Button {
+                        print("bookmarked")
+                    } label: {
+                        Label("Merken", systemImage: "bookmark")
+                        Spacer()
+                    }
                     
                 }
                 .padding()
@@ -94,10 +93,6 @@ struct SwiftUIView_Previews: PreviewProvider {
                                         //wasWatched: <#T##Bool#>,
                                         //player: <#T##AVPlayer#>
         )
-//        Group {
-            VideoDetails(booklet: booklet)
-//            VideoDetails(booklet: booklet)
-//                .preferredColorScheme(.light)
-//        }
+		VideoDetails(booklet: booklet)
     }
 }

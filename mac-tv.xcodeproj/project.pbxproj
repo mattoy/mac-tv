@@ -80,6 +80,7 @@
 		19E5CBDD25E058CA004AB005 /* VideoLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoLibrary.swift; sourceTree = "<group>"; };
 		19FD9190261DA82F00A530FA /* VideoStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoStore.swift; sourceTree = "<group>"; };
 		19FD9198261EDE7C00A530FA /* PlayerObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerObserver.swift; sourceTree = "<group>"; };
+		1FAF00E0292D4615004F3D10 /* .gitignore.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = .gitignore.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,9 +143,22 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
+		197BC9D827E48E3800626007 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				197EFD2526231D2600F357F0 /* Projector.swift */,
+				19E5CBAB25E0282C004AB005 /* Video.swift */,
+				19FD9190261DA82F00A530FA /* VideoStore.swift */,
+				19FD9198261EDE7C00A530FA /* PlayerObserver.swift */,
+				1993474926830D53004B2AED /* Archive.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		19E5CB8F25E02294004AB005 = {
 			isa = PBXGroup;
 			children = (
+				1FAF00E0292D4615004F3D10 /* .gitignore.md */,
 				19E5CB9A25E02294004AB005 /* mac-tv */,
 				1938DCB7262D69D2009FA28C /* mac-tvTests */,
 				19E5CB9925E02294004AB005 /* Products */,
@@ -167,11 +181,7 @@
 				193D348B25E12E180042C577 /* Views */,
 				193D348D25E12E230042C577 /* ViewModels */,
 				193ABF68265E440300B57BDA /* Protocols */,
-				197EFD2526231D2600F357F0 /* Projector.swift */,
-				19E5CBAB25E0282C004AB005 /* Video.swift */,
-				19FD9190261DA82F00A530FA /* VideoStore.swift */,
-				19FD9198261EDE7C00A530FA /* PlayerObserver.swift */,
-				1993474926830D53004B2AED /* Archive.swift */,
+				197BC9D827E48E3800626007 /* Model */,
 				191CFAB2265D4DAC00DFEAB6 /* Media.xcassets */,
 				19E5CBA425E02296004AB005 /* Info.plist */,
 				19E5CBA125E02296004AB005 /* Preview Content */,
@@ -435,7 +445,8 @@
 				SUPPORTED_PLATFORMS = "appletvsimulator appletvos";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				TVOS_DEPLOYMENT_TARGET = 14.3;
+				SWIFT_VERSION = 5.0;
+				TVOS_DEPLOYMENT_TARGET = 15.0;
 			};
 			name = Debug;
 		};
@@ -491,7 +502,8 @@
 				SUPPORTED_PLATFORMS = "appletvsimulator appletvos";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				TVOS_DEPLOYMENT_TARGET = 14.3;
+				SWIFT_VERSION = 5.0;
+				TVOS_DEPLOYMENT_TARGET = 15.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -578,7 +590,7 @@
 			repositoryURL = "https://github.com/scinfu/SwiftSoup";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 2.3.2;
+				minimumVersion = 2.4.3;
 			};
 		};
 		197F893A261C5F180062C8B9 /* XCRemoteSwiftPackageReference "FeedKit" */ = {

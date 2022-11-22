@@ -20,9 +20,7 @@ protocol BookletProtocol: ObservableObject, Identifiable {
     var wasWatched: Bool { get }
     
     var playingPosition: TimeInterval { get }
-    
-//    var player: AVPlayer { get }
-    
+        
     func loadImage() async -> UIImage
     
     func updatePlayingPosition(to time: TimeInterval)

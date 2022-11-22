@@ -28,7 +28,7 @@ struct VideoCardView<Destination, BookletType: BookletProtocol>: View where Dest
                 GeometryReader { geometry in
                     NavigationLink(destination: destination) {
                         ZStack(alignment: .bottom) {
-                            if let image = self.image {
+                            if let image {
                                 Image(uiImage: image)
                                     .resizable()
                                     .aspectRatio(16/9, contentMode: .fill)
@@ -62,9 +62,8 @@ struct VideoCardView<Destination, BookletType: BookletProtocol>: View where Dest
             .aspectRatio(16/9, contentMode: .fit)
             Text(booklet.title)
                 .font(.body)
-                .foregroundColor(Color.white)
                 .lineLimit(1)
-                .opacity(isFocused ? 1 : 0)
+//                .opacity(isFocused ? 1 : 0)
         }
         .buttonStyle(.card)
         .task {
@@ -78,24 +77,16 @@ struct VideoCardView_Previews: PreviewProvider {
         Group {
             VideoCardView(booklet: DesignTimeBooklet(title: "Coffee Run Coffee Run Coffee Run Coffee Run"),
                           destination: EmptyView())
+				.previewDisplayName("Unplayed")
 
             VideoCardView(booklet: DesignTimeBooklet(title: "Coffee Run Coffee Run Coffee Run Coffee Run",
                                                      progress: 0.5),
                           destination: EmptyView())
+				.previewDisplayName("Started")
             VideoCardView(booklet: DesignTimeBooklet(title: "Coffee Run Coffee Run Coffee Run Coffee Run",
                                                      wasWatched: true),
                           destination: EmptyView())
-            Group {
-                VideoCardView(booklet: DesignTimeBooklet(title: "Coffee Run Coffee Run Coffee Run Coffee Run"),
-                              destination: EmptyView())
-                VideoCardView(booklet: DesignTimeBooklet(title: "Coffee Run Coffee Run Coffee Run Coffee Run",
-                                                         progress: 0.5),
-                              destination: EmptyView())
-                VideoCardView(booklet: DesignTimeBooklet(title: "Coffee Run Coffee Run Coffee Run Coffee Run",
-                                                         wasWatched: true),
-                              destination: EmptyView())
-            }
-            .preferredColorScheme(.light)
+				.previewDisplayName("Finished")
         }
         .padding(10)
         .previewLayout(.fixed(width: 410, height: 300))

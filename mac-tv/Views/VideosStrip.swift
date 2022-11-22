@@ -75,13 +75,15 @@ struct VideosStrip_Previews: PreviewProvider {
                       DesignTimeBooklet()]
         Group {
             VideosStrip(headline: "Blender Cloud Videos", videos: videos)
-            VideosStrip(headline: "Blender Cloud Videos", videos: videos)
-                .preferredColorScheme(.light)
-            
+				.previewDisplayName("Default")
             VideosStrip(headline: "Blender Cloud Videos", videos: videos, columnCount: .twoColumn)
+				.previewDisplayName("Two Column")
             VideosStrip(headline: "Blender Cloud Videos", videos: videos, columnCount: .threeColumn)
+				.previewDisplayName("Three Column")
             VideosStrip(headline: "Blender Cloud Videos", videos: videos, columnCount: .fiveColumn)
+				.previewDisplayName("Four Column")
             VideosStrip(headline: "Blender Cloud Videos", videos: videos, columnCount: .sixColumn)
+				.previewDisplayName("Five Column")
         }
     }
 }

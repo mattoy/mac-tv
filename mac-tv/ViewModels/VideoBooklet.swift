@@ -28,7 +28,13 @@ class VideoBooklet: ObservableObject, BookletProtocol {
         let request = URLRequest(url: video.imageURL, cachePolicy: .returnCacheDataElseLoad)
         
         do {
-            let (data, response) = try await URLSession.shared.data(for: request)
+            let (data, response) = try await URLSession.shared.data(for: request) // TODO check response for error code
+			guard let httpResponse = response as? HTTPURLResponse else {
+				throw MyError.runtimeError("none")
+			}
+			guard (200...299) ~= httpResponse.statusCode else {
+				throw HTTPError(integerLiteral: httpResponse.statusCode)
+			}
             return UIImage(data: data) ?? UIImage(systemName: "exclamationmark.icloud.fill")!
         } catch {
             return UIImage(systemName: "exclamationmark.icloud.fill")!
@@ -71,14 +77,18 @@ extension VideoBooklet {
         video.published.formatted(date: .long, time: .omitted)
     }
     
-    var duration: String {        
-        var calendar = Calendar.current
-        calendar.locale = Locale(identifier: "de_DE")
-        let formatter = DateComponentsFormatter()
-        formatter.calendar = calendar
-        formatter.unitsStyle = .brief
-        formatter.allowedUnits = [ .hour, .minute ]
-        return formatter.string(from: video.duration)!
+	private var durationFormatter: DateComponentsFormatter {
+		var calendar = Calendar.current
+		calendar.locale = Locale(identifier: "de_DE")
+		let formatter = DateComponentsFormatter()
+		formatter.calendar = calendar
+		formatter.unitsStyle = .brief
+		formatter.allowedUnits = [ .hour, .minute ]
+		return formatter
+	}
+	
+    var duration: String {
+		durationFormatter.string(from: video.duration)!
     }
     
     var progress: Double? {
@@ -126,4 +136,53 @@ extension VideoBooklet {
 
 protocol LibraryDelegate {
     func replace(_ video: Video, with newVideo: Video)
+}
+
+
+// MARK: - Errors
+
+enum MyError: Error {
+	case runtimeError(String)
+}
+
+public enum HTTPError: Error, ExpressibleByIntegerLiteral {
+
+	case badRequest(description: String?)
+	case unauthorized(description: String?)
+	case notFound(description: String?)
+	case serverError(description: String?)
+	case unprocessableRequest(description: String?)
+	case unknown(description: String?)
+
+}
+
+// MARK: - ExpressibleByIntegerLiteral
+public extension HTTPError {
+
+	init(integerLiteral value: Int) {
+		self = .init(code: value, description: nil)
+	}
+
+}
+
+// MARK: - Init
+extension HTTPError {
+
+	init(code: Int, description: String?) {
+		switch code {
+		case 400:
+			self = .badRequest(description: description)
+		case 401:
+			self = .unauthorized(description: description)
+		case 404:
+			self = .notFound(description: description)
+		case 422:
+			self = .unprocessableRequest(description: description)
+		case 500:
+			self = .serverError(description: description)
+		default:
+			self = .unknown(description: description)
+		}
+	}
+
 }
